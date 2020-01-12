@@ -28,7 +28,7 @@ public class LockHandler {
 		Gson g = new GsonBuilder().create();
 		String name;
 		if (Minecraft.getMinecraft().getCurrentServerData() != null) {
-			name = Minecraft.getMinecraft().getCurrentServerData().serverIP;
+			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
 			String str = DimensionManager.getCurrentSaveRootDirectory().toString();
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
@@ -49,7 +49,7 @@ public class LockHandler {
 		Gson g = new GsonBuilder().create();
 		String name;
 		if (Minecraft.getMinecraft().getCurrentServerData() != null) {
-			name = Minecraft.getMinecraft().getCurrentServerData().serverIP;
+			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.replace(".", "-");
 		} else {
 			String str = DimensionManager.getCurrentSaveRootDirectory().toString();
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
@@ -69,6 +69,11 @@ public class LockHandler {
 			fr.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		if (!checkIfArrayIsValid()) {
+			lockedArray = getDefaultLockedArray();
+			saveToFile();
 		}
 	}
 	
@@ -98,28 +103,40 @@ public class LockHandler {
 	 * @return {@link LockHandler#lockedArray} but modified
 	 */
 	public static boolean[] getLockedArray() {
-		boolean[] arr = new boolean[41];
-		if (lockedArray == null || lockedArray.length != 41) {
+		if (!checkIfArrayIsValid()) {
 			lockedArray = getDefaultLockedArray();
 		}
 		
+		boolean[] arr = new boolean[41];
 		for (int i = 0; i < 41; i++) {
-			try {
-				arr[i] = Boolean.parseBoolean(lockedArray[i]);
-			} catch (NumberFormatException e) {
-				arr[i] = false;
-			}
+			arr[i] = Boolean.parseBoolean(lockedArray[i]);
 		}
 		
 		return arr;
 	}
 	
 	private static String[] getDefaultLockedArray() {
-		String[] lockedArray = new String[41];
+		String[] arr = new String[41];
 		for (int i = 0; i < 41; i++) {
-			lockedArray[i] = "false";
+			arr[i] = "false";
 		}
 		
-		return lockedArray;
+		return arr;
+	}
+	
+	private static boolean checkIfArrayIsValid() {
+		if (lockedArray == null || lockedArray.length != 41) {
+			return false;
+		}
+		
+		for (int i = 0; i < 41; i++) {
+			try {
+				Boolean.parseBoolean(lockedArray[i]);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
