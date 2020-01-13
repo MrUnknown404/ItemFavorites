@@ -13,6 +13,7 @@ import mrunknown404.itemfav.util.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.network.NetworkManager;
@@ -20,6 +21,7 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -30,8 +32,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MasterEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onConnect(PlayerEvent.PlayerLoggedInEvent e) {
-		LockHandler.readFromFile();
+	public void onConnect(EntityJoinWorldEvent  e) {
+		if (e.getEntity() instanceof EntityPlayer && e.getEntity() == Minecraft.getMinecraft().player) {
+			LockHandler.readFromFile();
+		}
 	}
 	
 	@SubscribeEvent
@@ -64,6 +68,8 @@ public class MasterEventHandler {
 	public void onGuiScreenEvent(GuiScreenEvent.MouseInputEvent e) {
 		if (Mouse.getEventButtonState() && (Mouse.getEventButton() == 0 || Mouse.getEventButton() == 1) && e.getGui() instanceof GuiContainer) {
 			Slot slot = ((GuiContainer) e.getGui()).getSlotUnderMouse();
+			
+			System.out.println("asd");
 			
 			if (slot != null && slot.inventory != null && slot.inventory instanceof InventoryPlayer) {
 				if (LockHandler.isSlotLocked(slot)) {

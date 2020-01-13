@@ -49,7 +49,7 @@ public class LockHandler {
 		Gson g = new GsonBuilder().create();
 		String name;
 		if (Minecraft.getMinecraft().getCurrentServerData() != null) {
-			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.replace(".", "-");
+			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
 			String str = DimensionManager.getCurrentSaveRootDirectory().toString();
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
@@ -72,6 +72,7 @@ public class LockHandler {
 		}
 		
 		if (!checkIfArrayIsValid()) {
+			System.err.println("Loaded invalid array!");
 			lockedArray = getDefaultLockedArray();
 			saveToFile();
 		}
