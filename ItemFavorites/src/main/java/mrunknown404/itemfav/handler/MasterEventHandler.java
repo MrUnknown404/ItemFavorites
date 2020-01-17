@@ -69,8 +69,6 @@ public class MasterEventHandler {
 		if (Mouse.getEventButtonState() && (Mouse.getEventButton() == 0 || Mouse.getEventButton() == 1) && e.getGui() instanceof GuiContainer) {
 			Slot slot = ((GuiContainer) e.getGui()).getSlotUnderMouse();
 			
-			System.out.println("asd");
-			
 			if (slot != null && slot.inventory != null && slot.inventory instanceof InventoryPlayer) {
 				if (LockHandler.isSlotLocked(slot)) {
 					e.setCanceled(true);
@@ -85,7 +83,7 @@ public class MasterEventHandler {
 		if ((e.isCancelable()) || ((e.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) && (e.getType() != RenderGameOverlayEvent.ElementType.JUMPBAR))) {
 			return;
 		}
-		if ((Minecraft.getMinecraft().world != null) && (Minecraft.getMinecraft().player != null)) {
+		if (Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player != null && !Minecraft.getMinecraft().player.isSpectator()) {
 			RenderOverlay.drawHotbar();
 		}
 	}
