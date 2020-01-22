@@ -52,7 +52,7 @@ public class RenderOverlay {
 		GlStateManager.translate(0, 0, 300);
 		GlStateManager.scale(0.5f, 0.5f, 0.5f);
 		for (int i = 0; i < 9; i++) {
-			if (!LockHandler.isHotbarSlotLocked(i)) {
+			if (!LockHandler.isSlotLocked(i)) {
 				continue;
 			}
 			
@@ -60,7 +60,7 @@ public class RenderOverlay {
 			mc.ingameGUI.drawTexturedModalRect(x * 2f, y * 2f, 0, 0, 7, 9);
 		}
 		
-		if (LockHandler.isHotbarSlotLocked(40) && !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty()) {
+		if (LockHandler.isSlotLocked(40) && !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty()) {
 			mc.ingameGUI.drawTexturedModalRect(194, (res.getScaledHeight() - 18) * 2, 0, 0, 7, 9);
 		}
 		

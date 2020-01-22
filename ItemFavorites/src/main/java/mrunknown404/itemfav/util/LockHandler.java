@@ -84,15 +84,14 @@ public class LockHandler {
 	
 	public static boolean isSlotLocked(Slot slot) {
 		checkEmptyAndUpdate(slot);
-		
-		return getLockedArray()[slot.getSlotIndex()];
+		return isSlotLocked(slot.getSlotIndex());
 	}
 	
-	public static boolean isHotbarSlotLocked(int slot) {
+	public static boolean isSlotLocked(int slot) {
 		return getLockedArray()[slot];
 	}
 	
-	public static void checkEmptyAndUpdate(Slot slot) {
+	private static void checkEmptyAndUpdate(Slot slot) {
 		if (!slot.getHasStack() && getLockedArray()[slot.getSlotIndex()]) {
 			lockedArray[slot.getSlotIndex()] = "false";
 			saveToFile();
