@@ -1,4 +1,4 @@
-package mrunknown404.itemfav.util;
+package mrunknown404.itemfav.utils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,12 +10,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import mrunknown404.itemfav.Main;
+import mrunknown404.itemfav.utils.compat.InvTweaksCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -46,6 +48,10 @@ public class LockHandler {
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		if (Loader.isModLoaded("inventorytweaks")) {
+			InvTweaksCompat.reload();
 		}
 	}
 	
@@ -79,6 +85,10 @@ public class LockHandler {
 			System.err.println("Loaded invalid array!");
 			lockedArray = getDefaultLockedArray();
 			saveToFile();
+		}
+		
+		if (Loader.isModLoaded("inventorytweaks")) {
+			InvTweaksCompat.reload();
 		}
 	}
 	

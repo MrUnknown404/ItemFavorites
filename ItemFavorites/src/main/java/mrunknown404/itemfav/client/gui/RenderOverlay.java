@@ -5,7 +5,7 @@ import java.util.List;
 import org.lwjgl.util.Color;
 
 import mrunknown404.itemfav.Main;
-import mrunknown404.itemfav.util.LockHandler;
+import mrunknown404.itemfav.utils.LockHandler;
 import mrunknown404.unknownlibs.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;

@@ -8,7 +8,7 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import mrunknown404.itemfav.Main;
 import mrunknown404.itemfav.client.gui.RenderOverlay;
-import mrunknown404.itemfav.util.LockHandler;
+import mrunknown404.itemfav.utils.LockHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.GameSettings;
