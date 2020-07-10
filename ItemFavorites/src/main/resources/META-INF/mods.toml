@@ -1,0 +1,34 @@
+modLoader="javafml"
+loaderVersion="[32,)"
+issueTrackerURL="https://github.com/MrUnknown404/ItemFavorites/issues"
+[[mods]]
+modId="itemfav"
+version="1.0.0"
+displayName="Item Favorites"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/item-favorites"
+logoFile=""
+credits="Allows you to favorite items in your inventory"
+authors="-Unknown-"
+description='''
+Allows you to favorite items in your inventory
+'''
+
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.itemfav]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[32,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"
+# Here's another dependency
+[[dependencies.itemfav]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.1]"
+    ordering="NONE"
+    side="BOTH"

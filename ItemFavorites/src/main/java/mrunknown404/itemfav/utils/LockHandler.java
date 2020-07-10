@@ -5,38 +5,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import mrunknown404.itemfav.Main;
-import mrunknown404.itemfav.utils.compat.InvTweaksCompat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.inventory.container.Slot;
 
-@Config(modid = Main.MOD_ID)
-@Config.LangKey(Main.MOD_ID + ".config.title")
 public class LockHandler {
 	/** Don't get directly use {@link LockHandler#getLockedArray} */
 	private static String[] lockedArray = getDefaultLockedArray();
 	
-	@Config.Comment("Hex color for lock")
-	public static String hexLockColor = "#33c0ff";
-	
 	public static void saveToFile() {
 		Gson g = new GsonBuilder().create();
 		String name;
-		if (Minecraft.getMinecraft().getCurrentServerData() != null) {
-			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
+		if (Minecraft.getInstance().getCurrentServerData() != null) {
+			name = Minecraft.getInstance().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
-			String str = DimensionManager.getCurrentSaveRootDirectory().toString();
+			String str = Minecraft.getInstance().getIntegratedServer().func_241755_D_().toString();
+			str = str.substring(12, str.length() - 1);
+			
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
 		}
 		System.out.println("Saving to file: " + Main.dir + "/" + name + ".dat");
@@ -49,19 +38,17 @@ public class LockHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		if (Loader.isModLoaded("inventorytweaks")) {
-			InvTweaksCompat.reload();
-		}
 	}
 	
 	public static void readFromFile() {
 		Gson g = new GsonBuilder().create();
 		String name;
-		if (Minecraft.getMinecraft().getCurrentServerData() != null) {
-			name = Minecraft.getMinecraft().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
+		if (Minecraft.getInstance().getCurrentServerData() != null) {
+			name = Minecraft.getInstance().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
-			String str = DimensionManager.getCurrentSaveRootDirectory().toString();
+			String str = Minecraft.getInstance().getIntegratedServer().func_241755_D_().toString();
+			str = str.substring(12, str.length() - 1);
+			
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
 		}
 		System.out.println("Reading from file: " + Main.dir + "/" + name + ".dat");
@@ -86,10 +73,6 @@ public class LockHandler {
 			lockedArray = getDefaultLockedArray();
 			saveToFile();
 		}
-		
-		if (Loader.isModLoaded("inventorytweaks")) {
-			InvTweaksCompat.reload();
-		}
 	}
 	
 	public static boolean isSlotLocked(Slot slot) {
@@ -110,6 +93,7 @@ public class LockHandler {
 	
 	public static void toggleSlot(Slot slot) {
 		lockedArray[slot.getSlotIndex()] = "" + !getLockedArray()[slot.getSlotIndex()];
+		
 		saveToFile();
 	}
 	
@@ -132,7 +116,7 @@ public class LockHandler {
 	private static String[] getDefaultLockedArray() {
 		String[] arr = new String[41];
 		for (int i = 0; i < 41; i++) {
-			arr[i] = "false";
+			arr[i] = "true";
 		}
 		
 		return arr;
@@ -152,15 +136,5 @@ public class LockHandler {
 		}
 		
 		return true;
-	}
-	
-	@EventBusSubscriber(modid = Main.MOD_ID)
-	private static class EventHandler {
-		@SubscribeEvent
-		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
-			if (e.getModID().equals(Main.MOD_ID)) {
-				ConfigManager.sync(Main.MOD_ID, Config.Type.INSTANCE);
-			}
-		}
 	}
 }

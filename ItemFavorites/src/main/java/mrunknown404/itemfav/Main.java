@@ -1,41 +1,40 @@
 package mrunknown404.itemfav;
 
 import java.io.File;
-import java.nio.file.Paths;
-
-import org.lwjgl.input.Keyboard;
+import java.io.IOException;
 
 import mrunknown404.itemfav.handler.MasterEventHandler;
-import mrunknown404.itemfav.utils.compat.InvTweaksCompat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(modid = Main.MOD_ID, clientSideOnly = true, useMetadata = true, dependencies = "required-after:unknownlibs@[1.0.3,)")
+@Mod(Main.MOD_ID)
 public class Main {
 	public static final String MOD_ID = "itemfav";
 	
-	public static final KeyBinding KEY_LOCK_ITEM = new KeyBinding("key.lockitem", Keyboard.KEY_R, "key.itemlock.category");
-	
-	@Instance
-	public static Main main;
+	public static final KeyBinding KEY_LOCK_ITEM = new KeyBinding("key.lockitem", 82, "key.itemlock.category");
 	
 	public static File dir;
 	
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent e) {
+	public Main() {
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+	}
+	
+	private void doClientStuff(@SuppressWarnings("unused") FMLClientSetupEvent e) {
 		MinecraftForge.EVENT_BUS.register(new MasterEventHandler());
 		ClientRegistry.registerKeyBinding(KEY_LOCK_ITEM);
 		
-		InvTweaksCompat.dir = Paths.get(e.getModConfigurationDirectory() + "/InvTweaksRules.txt");
-		
-		dir = new File(e.getModConfigurationDirectory(), "/ItemFavorites/");
-		if (!dir.exists()) {
-			dir.mkdirs();
+		try {
+			dir = new File(Minecraft.getInstance().gameDir.getCanonicalPath() + "/config/", "/ItemFavorites/");
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 }
