@@ -16,14 +16,15 @@ import net.minecraft.inventory.container.Slot;
 public class LockHandler {
 	/** Don't get directly use {@link LockHandler#getLockedArray} */
 	private static String[] lockedArray = getDefaultLockedArray();
+	private static Minecraft mc = Minecraft.getInstance();
 	
 	public static void saveToFile() {
 		Gson g = new GsonBuilder().create();
 		String name;
-		if (Minecraft.getInstance().getCurrentServerData() != null) {
-			name = Minecraft.getInstance().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
+		if (mc.getCurrentServerData() != null) {
+			name = mc.getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
-			String str = Minecraft.getInstance().getIntegratedServer().func_241755_D_().toString();
+			String str = mc.getIntegratedServer().func_241755_D_().toString();
 			str = str.substring(12, str.length() - 1);
 			
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
@@ -43,10 +44,10 @@ public class LockHandler {
 	public static void readFromFile() {
 		Gson g = new GsonBuilder().create();
 		String name;
-		if (Minecraft.getInstance().getCurrentServerData() != null) {
-			name = Minecraft.getInstance().getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
+		if (mc.getCurrentServerData() != null) {
+			name = mc.getCurrentServerData().serverIP.split(":")[0].replace(".", "-");
 		} else {
-			String str = Minecraft.getInstance().getIntegratedServer().func_241755_D_().toString();
+			String str = mc.getIntegratedServer().func_241755_D_().toString();
 			str = str.substring(12, str.length() - 1);
 			
 			name = str.substring(str.lastIndexOf('\\') + 1).replace(" ", "");
