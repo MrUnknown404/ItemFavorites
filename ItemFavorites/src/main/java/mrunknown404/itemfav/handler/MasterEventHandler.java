@@ -5,41 +5,40 @@ import mrunknown404.itemfav.client.gui.RenderOverlay;
 import mrunknown404.itemfav.utils.LockHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyReleasedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MasterEventHandler {
 	@SubscribeEvent
-	public void onConnect(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof PlayerEntity && e.getEntity() == Minecraft.getInstance().player) {
+	public void onConnect(ClientPlayerNetworkEvent.LoggedInEvent e) {
+		if (e.getPlayer() == Minecraft.getInstance().player) {
 			LockHandler.readFromFile();
 		}
 	}
 	
 	@SubscribeEvent
-	public void onGuiKeyboardInputEvent(KeyboardKeyReleasedEvent.Post e) {
-		/*if (Minecraft.getInstance().gameSettings.keyBindDrop.isKeyDown() && e.getGui() instanceof ContainerScreen<?>) { //Doesn't trigger?
+	public void onGuiKeyboardInputEventPress(GuiScreenEvent.KeyboardKeyEvent e) {
+		if (Minecraft.getInstance().gameSettings.keyBindDrop.getKey().getKeyCode() == e.getKeyCode() && e.getGui() instanceof ContainerScreen<?>) { //Doesn't trigger?
 			Slot slot = ((ContainerScreen<?>) e.getGui()).getSlotUnderMouse();
 			
-			System.out.println("1");
-			
 			if (slot != null && slot.inventory != null && slot.inventory instanceof PlayerInventory) {
-				System.out.println("2");
 				if (LockHandler.isSlotLocked(slot)) {
-					System.out.println("3");
 					e.setCanceled(true);
 					return;
 				}
 			}
-		}*/
-		
+		}
+	}
+	
+	@SubscribeEvent
+	public void onGuiKeyboardInputEventRelease(KeyboardKeyReleasedEvent.Post e) {
 		if (Main.KEY_LOCK_ITEM.isKeyDown() && e.getGui() instanceof ContainerScreen<?>) {
 			Slot slot = ((ContainerScreen<?>) e.getGui()).getSlotUnderMouse();
 			
@@ -83,4 +82,13 @@ public class MasterEventHandler {
 		
 		RenderOverlay.drawScreen(gui);
 	}
+	
+	/*
+	@SubscribeEvent
+	public void onItemTossEvent(ItemTossEvent e) {
+		if (LockHandler.isSlotLocked(e.getPlayer().inventory.currentItem)) {
+			e.setCanceled(true);
+		}
+	}
+	*/
 }
