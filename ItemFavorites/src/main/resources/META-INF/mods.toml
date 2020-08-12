@@ -3,7 +3,7 @@ loaderVersion="[32,)"
 issueTrackerURL="https://github.com/MrUnknown404/ItemFavorites/issues"
 [[mods]]
 modId="itemfav"
-version="1.0.1"
+version="1.1.0"
 displayName="Item Favorites"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/item-favorites"
 logoFile=""

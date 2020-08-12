@@ -117,7 +117,7 @@ public class LockHandler {
 	private static String[] getDefaultLockedArray() {
 		String[] arr = new String[41];
 		for (int i = 0; i < 41; i++) {
-			arr[i] = "true";
+			arr[i] = "false";
 		}
 		
 		return arr;

@@ -82,13 +82,4 @@ public class MasterEventHandler {
 		
 		RenderOverlay.drawScreen(gui);
 	}
-	
-	/*
-	@SubscribeEvent
-	public void onItemTossEvent(ItemTossEvent e) {
-		if (LockHandler.isSlotLocked(e.getPlayer().inventory.currentItem)) {
-			e.setCanceled(true);
-		}
-	}
-	*/
 }
