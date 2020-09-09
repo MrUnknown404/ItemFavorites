@@ -1,9 +1,10 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[33,)"
+license="GNU General Public License v3.0"
 issueTrackerURL="https://github.com/MrUnknown404/ItemFavorites/issues"
 [[mods]]
 modId="itemfav"
-version="1.1.0"
+version="1.0.0"
 displayName="Item Favorites"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/item-favorites"
 logoFile=""
@@ -20,7 +21,7 @@ Allows you to favorite items in your inventory
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[32,)" #mandatory
+    versionRange="[33,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -29,6 +30,6 @@ Allows you to favorite items in your inventory
 [[dependencies.itemfav]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1]"
+    versionRange="[1.16.2]"
     ordering="NONE"
     side="BOTH"
