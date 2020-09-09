@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import mrunknown404.itemfav.Main;
 import mrunknown404.itemfav.utils.LockHandler;
 import mrunknown404.itemfav.utils.ModConfig;
+import mrunknown404.unknownlibs.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -24,7 +25,7 @@ public class RenderOverlay {
 		List<Slot> slots = gui.getContainer().inventorySlots;
 		mc.getTextureManager().bindTexture(LOCK_ICON);
 		
-		Color c = hex2Color(ModConfig.hexLockColor.get());
+		Color c = ColorUtils.hex2Color(ModConfig.hexLockColor.get());
 		
 		GlStateManager.disableLighting();
 		GlStateManager.color4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
@@ -46,7 +47,7 @@ public class RenderOverlay {
 	
 	public static void drawHotbar() {
 		mc.getTextureManager().bindTexture(LOCK_ICON);
-		Color c = hex2Color(ModConfig.hexLockColor.get());
+		Color c = ColorUtils.hex2Color(ModConfig.hexLockColor.get());
 		
 		GlStateManager.color4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
 		GlStateManager.translatef(0, 0, 300);
@@ -67,35 +68,5 @@ public class RenderOverlay {
 		GlStateManager.color4f(1, 1, 1, 1f);
 		GlStateManager.scalef(2, 2, 2);
 		GlStateManager.translatef(0, 0, -300);
-	}
-	
-	public static boolean isValidHexColor(String hexColor) {
-		if (!hexColor.startsWith("#")) {
-			return false;
-		}
-		
-		hexColor = hexColor.substring(1);
-		if (hexColor.length() == 0 || (hexColor.charAt(0) != '-' && Character.digit(hexColor.charAt(0), 16) == -1)) {
-			return false;
-		}
-		if (hexColor.length() == 1 && hexColor.charAt(0) == '-') {
-			return false;
-		}
-		
-		for (int i = 1; i < hexColor.length(); i++) {
-			if (Character.digit(hexColor.charAt(i), 16) == -1) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	private static Color hex2Color(String colorStr) {
-		if (!isValidHexColor(colorStr)) {
-			return new Color(0, 0, 0, 0);
-		}
-		
-		return new Color(Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16), Integer.valueOf(colorStr.substring(5, 7), 16));
 	}
 }
