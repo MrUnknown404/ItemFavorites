@@ -27,11 +27,20 @@ public class Main {
 	public static final KeyBinding KEY_NEW_DROP = new KeyBinding("key.drop", Keyboard.KEY_Q, "key.categories.inventory") {
 		@Override
 		public boolean isActiveAndMatches(int keyCode) {
-			if (mc.player == null && mc.currentScreen != null) {
+			if (mc.player == null || mc.currentScreen != null) {
 				return super.isActiveAndMatches(keyCode);
 			}
 			
 			return !LockHandler.isSlotLocked(mc.player.inventory.currentItem) && super.isActiveAndMatches(keyCode);
+		}
+		
+		@Override
+		public boolean isKeyDown() {
+			if (mc.player == null || mc.currentScreen != null) {
+				return super.isKeyDown();
+			}
+			
+			return !LockHandler.isSlotLocked(mc.player.inventory.currentItem) && super.isKeyDown();
 		}
 	};
 	
