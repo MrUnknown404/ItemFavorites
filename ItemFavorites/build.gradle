@@ -1,46 +1,104 @@
 buildscript {
-    repositories {
-        jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
-
-version = "[${mc_version}]-${version}"
-archivesBaseName = project.archivesBaseName
-
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+	repositories {
+		maven { url = 'https://maven.minecraftforge.net' }
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+	}
 }
 
+plugins {
+	id 'eclipse'
+	id 'maven-publish'
+}
+apply plugin: 'net.minecraftforge.gradle'
+
+
+version = mod_version
+archivesBaseName = 'ItemFavorites-' + mc_version
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    version = "${mc_version}-14.23.5.2847"
-    runDir = "run"
-
-    mappings = "snapshot_20171003"
+	mappings channel: 'official', version: mc_version
+	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+	
+	runs {
+		client {
+			workingDirectory project.file('run')
+			
+			property 'forge.logging.markers', ''
+			property 'forge.logging.console.level', 'debug'
+			
+			mods {
+				itemfavorites {
+					source sourceSets.main
+				}
+			}
+		}
+		
+		server {
+			workingDirectory project.file('run')
+			
+			property 'forge.logging.markers', ''
+			property 'mixin.debug', 'true'
+			property 'forge.logging.console.level', 'debug'
+			
+			mods {
+				itemfavorites {
+					source sourceSets.main
+				}
+			}
+		}
+		
+		data {
+			workingDirectory project.file('run')
+			
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+			
+			args '--mod', 'itemfavorites', '--all',
+					'--existing', file('src/main/resources/').toString(),
+					'--existing', file('src/generated/resources/').toString(),
+					'--output', file('src/generated/resources/')
+			
+			mods {
+				itemfavorites {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-
+	minecraft 'net.minecraftforge:forge:' + mc_version + '-' + forge_version
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+jar {
+	manifest {
+		attributes([
+			"Specification-Title": "itemfavorites",
+			"Specification-Vendor": "itemfavorites",
+			"Specification-Version": "1", // We are version 1 of ourselves
+			"Implementation-Title": project.name,
+			"Implementation-Version": "${version}",
+			"Implementation-Vendor" :"itemfavorites",
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
+}
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar') 
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//publish.dependsOn('reobfJar')
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
